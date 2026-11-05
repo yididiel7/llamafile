@@ -14,6 +14,9 @@ llamafile -m Apertus-8B-Instruct-2509.gguf --temp ...
 ./Apertus-8B-Instruct-2509.llamafile --temp ...
 ```
 
+For a full reference of wrapper flags and pass-through `llama.cpp` options, see
+[CLI Arguments and Flags](cli_arguments.md).
+
 
 ## Running llamafile in CLI mode
 
@@ -59,6 +62,15 @@ Here's how you can use Qwen3.5 9B to summarize a Web page:
     sed 's/   */ /g')`"
 ```
 
+With a [decision model](api.md#decision-models), `--cli` reads a JSON request
+from stdin (or `-p`, or `-f FILE`) and prints the JSON answer, the same as
+the server's `POST /v1/systemone`:
+
+```sh
+echo '{"state": "I was charged twice!", "questions": {"angry": {"type": "noul", "instructions": "Is the customer angry?"}}}' |
+  llamafile -m Kev-4B-Q4_K_M.gguf --cli | jq .answers.angry.noul
+```
+
 ## Running llamafile in chat mode
 
 If you add the `--chat` argument to a llamafile, you will run it in chat mode.
@@ -94,6 +106,33 @@ large enough (but still fits your memory). For instance:
   --jinja
   --ctx-size 64000
 ```
+
+### Built-in tools
+
+The server Web UI is inherited from llama.cpp, so some messages in the UI use
+the upstream executable name `llama-server`. When following those messages,
+replace `llama-server` with the standalone runtime or the filename of the
+model-bundled llamafile you are running. For example, these commands enable
+the same built-in tools:
+
+```sh
+llamafile -m model.gguf --server --tools all
+./ModelName.llamafile --server --tools all
+```
+
+`--tools all` enables every tool provided by the bundled server. A
+comma-separated list enables only selected tools, such as
+`--tools read_file,file_glob_search,grep_search`. The exact tool names for a
+build are listed by `--server --help`. See [Built-in local tools](built-in-tools.md)
+for the complete tool reference, limits, permission flow, and llamafile sandbox
+behavior.
+
+Built-in tools may access local files with the
+permissions of the llamafile process. Enable only the tools you need, do not
+enable them in an untrusted environment, and review the
+[sandbox behavior](built-in-tools.md#security-and-sandbox-behavior).
+For security, the server restricts allowed browser origins to localhost by
+default when built-in tools are enabled.
 
 ## Running llamafile in combined mode
 
@@ -154,4 +193,3 @@ llamafile -ngl 9999 --temp 0 \
   sed -e's/ /_/g' -e's/$/.jpg/'
 a_baby_monkey_on_the_back_of_a_mother.jpg
 ```
-

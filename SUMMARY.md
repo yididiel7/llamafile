@@ -10,13 +10,18 @@
 ## Using llamafile
 
 * [Running a llamafile](running_llamafile.md)
+* [API server](api.md)
+* [Built-in local tools](built-in-tools.md)
+* [Agentfile](agentfile.md)
 * [Creating llamafiles](creating_llamafiles.md)
 * [Source installation](source_installation.md)
 * [Building DLLs](building_dlls.md)
 
 ## Reference
 
+* [CLI Arguments and Flags](cli_arguments.md)
 * [Technical details](technical_details.md)
+* [Security](security.md)
 * [Supported Systems](support.md)
 * [Troubleshooting](troubleshooting.md)
 
